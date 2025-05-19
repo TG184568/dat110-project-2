@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import no.hvl.dat110.broker.Broker;
 import no.hvl.dat110.broker.Dispatcher;
 import no.hvl.dat110.broker.Storage;
+import java.net.ServerSocket;
 
 public abstract class Test0Base {
 
@@ -24,7 +25,11 @@ public abstract class Test0Base {
 	
 	@BeforeEach
 	public void setUp() throws Exception {
-		
+		// Dynamically find a free port
+		try (ServerSocket socket = new ServerSocket(0)) {
+			BROKER_TESTPORT = socket.getLocalPort();
+		}
+
 		storage = new Storage();
 		dispatcher = new Dispatcher(storage);
 		broker = new Broker(dispatcher,BROKER_TESTPORT);

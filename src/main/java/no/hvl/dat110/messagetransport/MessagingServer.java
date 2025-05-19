@@ -16,8 +16,9 @@ public class MessagingServer {
 			
 		} catch (IOException ex) {
 			
-			System.out.println("Messaging server: " + ex.getMessage());
+			System.err.println("[MessagingServer] Failed to bind server socket on port " + port + ": " + ex.getMessage());
 			ex.printStackTrace();
+			this.welcomeSocket = null;
 		}
 	}
 
@@ -26,8 +27,10 @@ public class MessagingServer {
 		
 		Connection connection = null;
 		
-		// TODO
-		// accept TCP connection on welcome socket and create connection
+		if (welcomeSocket == null) {
+			System.err.println("[MessagingServer] ERROR: Server socket is not initialized. Cannot accept connections.");
+			throw new IllegalStateException("Server socket not initialized. Check for port conflicts or previous errors.");
+		}
 		
 		try {
 			
@@ -37,7 +40,7 @@ public class MessagingServer {
 			
 		} catch (IOException ex) {
 			
-			System.out.println("Messaging server: " + ex.getMessage());
+			System.err.println("[MessagingServer] Error accepting connection: " + ex.getMessage());
 			ex.printStackTrace();
 			// TODO: closing welcomeSocket
 		}
